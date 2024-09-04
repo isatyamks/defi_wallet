@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEfi-Wallet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DEfi-Wallet</h1>
+        
+        <h2>Create Wallet</h2>
+        <button onclick="createWallet()">Create Wallet</button>
+        <pre id="wallet-info"></pre>
+        
+        <h2>New Transaction</h2>
+        <div class="form-group">
+            <label for="sender">Sender:</label>
+            <input type="text" id="sender" placeholder="Sender Address">
+        </div>
+        <div class="form-group">
+            <label for="recipient">Recipient:</label>
+            <input type="text" id="recipient" placeholder="Recipient Address">
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" placeholder="Amount">
+        </div>
+        <button onclick="submitTransaction()">Submit Transaction</button>
+        <pre id="transaction-status"></pre>
+    </div>
+
+    <script>
+        async function createWallet() {
+            try {
+                const response = await fetch('/create_wallet');
+                const data = await response.json();
+                document.getElementById('wallet-info').textContent = `Private Key: ${data.private_key}\nPublic Key: ${data.public_key}`;
+            } catch (error) {
+                console.error('Error creating wallet:', error);
+            }
+        }
+
+        async function submitTransaction() {
+            const sender = document.getElementById('sender').value;
+            const recipient = document.getElementById('recipient').value;
+            const amount = document.getElementById('amount').value;
+
+            try {
+                const response = await fetch('/new_transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ sender, recipient, amount }),
+                });
+
+                if (response.ok) {
+                    document.getElementById('transaction-status').textContent = 'Transaction added successfully';
+                } else {
+                    document.getElementById('transaction-status').textContent = 'Failed to add transaction';
+                }
+            } catch (error) {
+                console.error('Error submitting transaction:', error);
+            }
+        }
+    </script>
+</body>
+</html>
