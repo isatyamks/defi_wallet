@@ -18,3 +18,10 @@ class Transaction:
             return True
         except:
             return False
+    def displayblocks():
+        print(f'block is blocked due to the error of the macine learing anf 
+        
+        
+        try:
+            static:
+            if thr gillwnj
